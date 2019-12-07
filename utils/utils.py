@@ -1,7 +1,5 @@
 import pandas as pd
-from camera_optimization.data import load_data
-from camera_optimization.data import db_update
-from camera_optimization.data import action_preprocess
+from prepare import action_preprocess
 import operator
 import os
 
@@ -456,11 +454,12 @@ def getUserDefinedNextNodes(t, userCamData, num_cameras):
 
 
 if __name__ == "__main__":
-    db, cursor = db_update.db_connect("mysql.minestoryboard.com", "minestory", "2870", "minestory")
-    script = load_data.loadScript(8, cursor)
-    print(script)
-    protagonist = getProtagonist(script)
-    print(protagonist)
+    pass
+    # db, cursor = db_update.db_connect("mysql.minestoryboard.com", "minestory", "2870", "minestory")
+    # script = load_data.loadScript(8, cursor)
+    # print(script)
+    # protagonist = getProtagonist(script)
+    # print(protagonist)
 
 
 

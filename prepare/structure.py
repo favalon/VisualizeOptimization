@@ -1,5 +1,6 @@
 import os
 import numpy
+from utils import utils
 
 
 class Project:
@@ -7,7 +8,7 @@ class Project:
     camera = None
     character = None
 
-    def __init__(self, db_loader, project_id, time, protagonist=None, add_object=None, add_user_cams=None):
+    def __init__(self, db_loader, project_id, full_time=None, protagonist=None, add_object=None, add_user_cams=None):
         self.project_id = project_id
 
         self.script = db_loader.loadScript()  # list of dict
@@ -17,8 +18,8 @@ class Project:
         # else:
         self.startTime = 0
         self.endTime = max([int(x) for x in self.script[-1]["startTime"]]) + max([int(x) for x in self.script[-1]["duration"]])-1
-        # self.totalTime = utils.getTotalTime(self.script)
-        #
+        self.totalTime = utils.getTotalTime(self.script)
+
         # self.totalDuration = total_duration
         # if not self.totalDuration:
         #     self.totalDuration = self.totalTime
@@ -51,15 +52,46 @@ class Project:
 
         # user defined cameras are added to be considered
         self.userCamData = None
-        if self.addUserCams:
-            self.userCamData = db_loader.loadUserCamData() # dict {startTime: <user cam data>}
-            self.userCamData, self.parallelUserCam = user_cam_preprocess.preprocess_user_cam(self.userCamData)
-            print(self.userCamData)
-            print(self.parallelUserCam)
+        # if self.addUserCams:
+        #     self.userCamData = db_loader.loadUserCamData() # dict {startTime: <user cam data>}
+        #     self.userCamData, self.parallelUserCam = user_cam_preprocess.preprocess_user_cam(self.userCamData)
+        #     print(self.userCamData)
+        #     print(self.parallelUserCam)
 
         # conflict detector
         self.defaultVelocity = db_loader.loadDefaultVelocity()
         self.defaultDist = db_loader.loadDefaultCharCamDist()
+
+        # extra part
+        self.color_abs_coverage = None
+        self.color_code = None
+        self.color_diff_coverage = None
+        self.action_data = None
+        self.animation_dict = None
+
+        # optimized path
+        self.camera_optimized_path = None
+
+    def load_color_abs_coverage(self, color_abs_coverage):
+        self.color_abs_coverage = color_abs_coverage
+
+    def load_color_code(self, color_code):
+        self.color_code = color_code
+
+    def load_color_diff_coverage(self, color_diff_coverage):
+        self.color_diff_coverage = color_diff_coverage
+
+    def load_action_data(self, action_data):
+        self.action_data = action_data
+
+    def load_animation_dict(self, animation_dict):
+        self.animation_dict = animation_dict
+
+    def set_camera_optimized_path(self, camera_optimized_path):
+        self.camera_optimized_path = camera_optimized_path
+
+    def get_camera_optimized_path(self):
+        return self.camera_optimized_path
 
 
 class Sequence:

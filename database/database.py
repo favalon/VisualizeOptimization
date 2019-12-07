@@ -66,7 +66,7 @@ class DBLoader:
         print(script)
         return script
 
-    def load_defaultCameras(self):
+    def loadDefaultCameras(self):
         defaultCams =  self.db.download_data(self.project_id, "defaultCams")
         defaultCams = json.loads(defaultCams)
 
@@ -191,8 +191,9 @@ if __name__ == "__main__":
     db_address = "mysql.minestoryboard.com"
     database = DataBase(db_address, "minestory", "2870", "minestory")
     database.db_connect()
-    dl = DBLoader(database, 39)
+    dl = DBLoader(database, 32)
     characters = dl.loadCharacters()
+    script = dl.loadScript()
     database.db_disconnect()
     database.db_connect()
     database.db_connect()

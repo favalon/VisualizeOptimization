@@ -116,16 +116,16 @@ if __name__ == "__main__":
 
 
 
-while program is running
-    if cur_time == pre_time + d_t:
-        if buffer is empty:
-            pre_time = cur_time
-            output the p_last
-        else:
-            pre_time = cur_time
-            pop the first p in the buffer
-    else:
-        wait until cur_time == pre_time + d_t
+# while program is running
+#     if cur_time == pre_time + d_t:
+#         if buffer is empty:
+#             pre_time = cur_time
+#             output the p_last
+#         else:
+#             pre_time = cur_time
+#             pop the first p in the buffer
+#     else:
+#         wait until cur_time == pre_time + d_t
 
 
 
