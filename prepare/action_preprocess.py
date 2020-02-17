@@ -57,10 +57,26 @@ def getActionBodyImportance(action8Layers):
         else:
             return charBodyImportance["upperBodyProminent"]
 
-    return charBodyImportance[actionBodyImportanceMap[action8Layers[0].split("_")[0]]]
+    # ==== temp replace ====
+    key = action8Layers[0].split("_")[0]
+    if key in actionBodyImportanceMap.keys():
+
+        return charBodyImportance[actionBodyImportanceMap[key]]
+    else:
+        return charBodyImportance[actionBodyImportanceMap['idle']]
+    # ==== end ====
+
+    # return charBodyImportance[actionBodyImportanceMap[action8Layers[0].split("_")[0]]]
 
 def getActionSOImportance(action8Layers):
-    return actionSOImportance[actionSOImporanceMap[action8Layers[0].split("_")[0]]]
+    # ==== temp replace ====
+    key = action8Layers[0].split("_")[0]
+    if key in actionSOImporanceMap.keys():
+        return actionSOImportance[actionSOImporanceMap[key]]
+    else:
+        return actionSOImportance[actionSOImporanceMap['idle']]
+    # ==== end ====
+    # return actionSOImportance[actionSOImporanceMap[action8Layers[0].split("_")[0]]]
 
 def getItemImportance():
     return itemImportanceMap["frontProminent"]

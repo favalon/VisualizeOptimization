@@ -41,7 +41,7 @@ def data_preparation_main(project_id):
     project_data = Project(dl, project_id)
 
     # TODO: change local data load to mysql
-    path = "../../TCL_MineTool/UnityProject/MineStudioPrototype/Assets/StreamingAssets/camera_data"
+    path = "../../TCL_MineTool/UnityProject/MineStudioPrototype/Assets/StreamingAssets/camera_data_58"
     if not os.path.isdir(path):
         print("local path is wrong")
     else:

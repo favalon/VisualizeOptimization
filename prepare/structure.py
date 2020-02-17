@@ -1,6 +1,8 @@
 import os
-import numpy
+import numpy as np
+import json
 from utils import utils
+from sklearn.preprocessing import normalize
 
 
 class Project:
@@ -12,6 +14,9 @@ class Project:
         self.project_id = project_id
 
         self.script = db_loader.loadScript()  # list of dict
+        # script reorder only for temp
+        self.script_reorder()
+
         # if startTime and endTime:
         #     self.startTime = startTime
         #     self.endTime = endTime
@@ -63,14 +68,50 @@ class Project:
         self.defaultDist = db_loader.loadDefaultCharCamDist()
 
         # extra part
+        self.char2camera_id = None
         self.color_abs_coverage = None
         self.color_code = None
         self.color_diff_coverage = None
         self.action_data = None
         self.animation_dict = None
+        self.animation_score_dict = None
+        self.talking_char_t = None
 
         # optimized path
         self.camera_optimized_path = None
+        self.minimum_cost_map = None
+        self.initial_minimum_cost_map()
+
+    def script_reorder(self):
+        self.script = sorted(self.script, key = lambda i: i['startTime'][0])
+
+        for i, seq_data in enumerate(self.script):
+            if max(seq_data['duration']) == 0:
+                self.script.remove(seq_data)
+
+
+    def init_char2camera_id(self):
+        char2camera_id = {}
+        for key in self.defaultCameras.keys():
+            charIndex = self.defaultCameras[key]['charIndex']
+            if charIndex not in char2camera_id.keys():
+                char2camera_id[charIndex] = []
+                x = self.defaultCameras[key]['camIndex']
+                char2camera_id[charIndex].append(self.defaultCameras[key]['camIndex'])
+            else:
+                char2camera_id[charIndex].append(self.defaultCameras[key]['camIndex'])
+
+        self.char2camera_id = char2camera_id
+
+    def initial_talking_char_t(self, talking_char_t):
+        self.talking_char_t = talking_char_t
+
+    def initial_minimum_cost_map(self):
+        self.minimum_cost_map = np.full((self.totalTime, self.numDefaultCameras), 9999)
+
+    def initial_animation_score_dict(self, path):
+        with open(path, "r") as f:
+            self.animation_score_dict = json.load(f)
 
     def load_color_abs_coverage(self, color_abs_coverage):
         self.color_abs_coverage = color_abs_coverage
@@ -147,4 +188,41 @@ class Object:
         self.sequence_action_length = []  # value == current actions length
 
 
+class CostMatrix:
+
+    def __init__(self, project_id, action_cost_weight=5, visual_cost_weight=1, talking_cost_weight=15):
+        self.project_id = project_id
+        self.action_cost_weight = action_cost_weight
+        self.visual_cost_weight = visual_cost_weight
+        self.talking_cost_weight = talking_cost_weight
+
+        self.sequence_cover = None
+        self.action_map = None
+        self.visual_cost_map = None
+        self.action_cost_map = None
+        self.talking_cost = None
+
+        # ======= sum up the cost parts ===========
+        self.quality_cost = None
+
+    def init_sequence_cover(self, sequence_cover):
+        self.sequence_cover = sequence_cover
+
+    def init_action_map(self, action_map):
+        self.action_map = action_map
+
+    def init_visual_cost_map(self, visual_cost_map):
+        self.visual_cost_map = visual_cost_map
+
+    def init_action_cost_map(self, action_cost_map):
+        self.action_cost_map = action_cost_map
+
+    def normalize_cost(self, matrix):
+        pass
+
+    def init_talking_cost(self, talking_cost):
+        self.talking_cost = talking_cost
+
+    def init_quality_cost(self, quality_cost):
+        self.quality_cost = quality_cost
 

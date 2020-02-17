@@ -2,7 +2,8 @@
 import os
 import pickle
 from common.data_preparation import data_preparation_main
-from common.camera_optimization import camera_optimization_main
+from common.camera_optimization import camera_optimization_main, camera_pre_optimization
+from prepare.structure import CostMatrix
 
 # util imports
 from utils.files import ImageLoader
@@ -27,14 +28,21 @@ def load_data(path, fn):
 def main(image_root, num_camera, num_time):
     result_path = "../results"
     # ================ Data Preparation ==============
-    # project_data = data_preparation_main(32)
+    # project_data = data_preparation_main(58)
 
     # save_data(result_path, "project_data", project_data)
 
     # =============== Camera Optimization ============
 
     project_data = load_data(result_path, "project_data")
-    path = camera_optimization_main(project_data)
+    project_data.initial_minimum_cost_map()
+    project_data.initial_animation_score_dict("../prepare/static_datas/animation_score_dict")
+    project_data.init_char2camera_id()
+
+    cost_matrix = CostMatrix(project_data.project_id,
+                             action_cost_weight=5, visual_cost_weight=1)
+    camera_pre_optimization(project_data, cost_matrix)
+    camera_optimization_main(project_data, cost_matrix)
 
 
 
@@ -44,6 +52,7 @@ def main(image_root, num_camera, num_time):
     # images_path = loader.get_image_path()
 
     pass
+
 
 if __name__ == "__main__":
     image_root = "../test_data/image_root"

@@ -372,6 +372,7 @@ def prepareQualityHashWoUserCam(qualityHash, totalTime, startTime, endTime, came
                                                            cameraIndex, characterIndex, protagonist, script,
                                                            vis, headRoom, eye, distMap)
 
+
 # prepare node cost for graph nodes when there are user free cameras added
 def prepareQualityHashWUserCam(qualityHash, totalTime, startTime, endTime, cameraIndex, characterIndex, protagonist, scriptDf, visDf, headRoomDf, eyeDf, distMap, objIndex = None, objVisibility = None, userCamData = None):
     """
